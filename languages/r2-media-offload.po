@@ -1,0 +1,71 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: R2 Media Offload\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-11-25 12:27+0000\n"
+"PO-Revision-Date: 2024-11-25 12:27+0000\n"
+"Last-Translator: \n"
+"Language-Team: Slovenčina\n"
+"Language: sk_SK\n"
+"Plural-Forms: nplurals=3; plural=( n == 1 ) ? 0 : ( n >= 2 && n <= 4 ) ? 1 : "
+"2;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.6.14; wp-6.7.1\n"
+"X-Domain: r2-media-offload"
+#. Author of the plugin
+msgid "Andrej Srna"
+msgstr ""
+#: r2-media-offload.php:105
+msgid ""
+"Are you sure you want to delete all local media files that have been "
+"migrated to R2? This action is irreversible."
+msgstr ""
+#: r2-media-offload.php:100
+msgid "Delete Local Media Files Already on R2"
+msgstr ""
+#. Author URI of the plugin
+msgid "https://andrejsrna.sk"
+msgstr ""
+#. URI of the plugin
+msgid "https://github.com/andrejsrna/R2-Media-Offload"
+msgstr ""
+#: r2-media-offload.php:163
+msgid "Keep local copies of media files after uploading to R2"
+msgstr ""
+#: r2-media-offload.php:73
+msgid "Local media files have been deleted successfully."
+msgstr ""
+#: r2-media-offload.php:95
+msgid "Media Management"
+msgstr ""
+#: r2-media-offload.php:68
+msgid "Media migration to R2 completed successfully."
+msgstr ""
+#: r2-media-offload.php:89
+msgid "Migrate Media to R2"
+msgstr ""
+#. Description of the plugin
+msgid ""
+"Offload WordPress media uploads to R2-compatible object storage for "
+"efficient and cost-effective storage."
+msgstr ""
+#. Name of the plugin
+msgid "R2 Media Offload"
+msgstr ""
+#: r2-media-offload.php:65
+msgid "R2 Offload Settings"
+msgstr ""
+#: r2-media-offload.php:164
+msgid ""
+"Uncheck to delete local media files after uploading to R2. Be cautious, as "
+"this action is irreversible."
+msgstr ""
+#: r2-media-offload.php:96
+msgid "You can manage your media files that have been migrated to R2."
+msgstr ""
+#: r2-media-offload.php:85
+msgid "You can migrate your existing media library to R2."
+msgstr ""

@@ -23,6 +23,6 @@ Cloudflare R2 Media Offload is a WordPress plugin that offloads your media libra
 
    - Clone the repository:
      ```bash
-     git clone https://github.com/yourusername/cloudflare-r2-media-offload.git
+     git clone https://github.com/andrejsrna/WordPress-Offload-Media-to-Cloudflare-R2.git
      ```
-   - Or [download the ZIP file](https://github.com/yourusername/cloudflare-r2-media-offload/archive/refs/heads/main.zip) and extract it to your WordPress plugins directory (`wp-content/plugins/`).
+   - Or [download the ZIP file](https://github.com/andrejsrna/WordPress-Offload-Media-to-Cloudflare-R2/archive/refs/heads/main.zip) and extract it to your WordPress plugins directory (`wp-content/plugins/`).

@@ -1,10 +1,40 @@
 <?php
 /*
 Plugin Name: Cloudflare R2 Media Offload
-Description: Offloads media uploads to Cloudflare R2 storage.
+Plugin URI: https://andrejsrna.sk
+Description: Offload WordPress media uploads to Cloudflare R2 object storage for efficient and cost-effective storage.
 Version: 1.0
-Author: Your Name
+Author: Andrej Srna
+Author URI: https://andrejsrna.sk
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: cloudflare-r2-media-offload
+Domain Path: /languages
+Tags: cloudflare, R2, media, storage, offload
+
+== Screenshots ==
+1. **Media Upload Configuration**  
+   Screenshot of the settings page where users can configure their Cloudflare R2 credentials.
+
+== Description ==
+Cloudflare R2 Media Offload helps WordPress users seamlessly offload their media uploads to Cloudflare R2 storage. By doing so, it reduces server load and leverages Cloudflare's zero-egress fee object storage.
+
+**Features:**
+- Automatically upload media files to Cloudflare R2 upon upload.
+- Configure and manage R2 buckets directly from WordPress.
+- Support for S3-compatible APIs for streamlined integration.
+- Reduce server storage usage and improve performance.
+
+**Visit the [author's website](https://andrejsrna.sk) for more details and updates.**
+
+== Installation ==
+1. Download and install the plugin via the WordPress dashboard or manually upload it to your `wp-content/plugins` directory.
+2. Activate the plugin through the 'Plugins' menu in WordPress.
+3. Navigate to 'Settings > Cloudflare R2' to configure your API credentials and bucket settings.
+4. Save changes and start offloading media to R2.
+
 */
+
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly

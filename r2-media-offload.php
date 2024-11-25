@@ -269,36 +269,36 @@ add_filter('wp_get_attachment_url', 'replace_media_url_with_r2', 10, 2);
 add_filter('image_downsize', 'cloudflare_r2_image_downsize', 10, 3);
 
 function cloudflare_r2_image_downsize($downsize, $attachment_id, $size) {
-    // Ensure the size parameter is valid
+    // Ensure the $size parameter is valid
     if (!is_string($size) && !is_array($size)) {
-        return false; // Fallback to default handling
+        return false; // Fallback to default WordPress handling
     }
 
     // Retrieve the R2 URL for the attachment
     $r2_url = get_post_meta($attachment_id, '_cloudflare_r2_url', true);
 
     if (!$r2_url) {
-        return false; // Fallback to default handling if no R2 URL is set
+        return false; // Fallback if no R2 URL is set
     }
 
     // Retrieve attachment metadata
     $meta = wp_get_attachment_metadata($attachment_id);
 
     if (!$meta) {
-        return false; // Fallback to default handling if no metadata is found
+        return false; // Fallback if no metadata is found
     }
 
     $upload_dir = wp_upload_dir();
 
     // Handle full-size image
-    if ($size === 'full' || !isset($meta['sizes'][$size])) {
+    if ($size === 'full' || (is_string($size) && !isset($meta['sizes'][$size]))) {
         $object_key = str_replace(trailingslashit($upload_dir['basedir']), '', get_attached_file($attachment_id));
         $image_url = rtrim(get_option('cloudflare_r2_public_bucket_url'), '/') . '/' . $object_key;
         $width = $meta['width'] ?? null;
         $height = $meta['height'] ?? null;
         $is_intermediate = false;
-    } else {
-        // Handle specific image sizes
+    } elseif (is_string($size) && isset($meta['sizes'][$size])) {
+        // Handle specific named sizes like 'thumbnail', 'medium', etc.
         $size_meta = $meta['sizes'][$size];
         $file_info = pathinfo(get_attached_file($attachment_id));
         $file_path = trailingslashit($file_info['dirname']) . $size_meta['file'];
@@ -307,6 +307,38 @@ function cloudflare_r2_image_downsize($downsize, $attachment_id, $size) {
         $width = $size_meta['width'] ?? null;
         $height = $size_meta['height'] ?? null;
         $is_intermediate = true;
+    } elseif (is_array($size)) {
+        // Handle custom sizes defined as [width, height]
+        $custom_width = $size[0] ?? 0;
+        $custom_height = $size[1] ?? 0;
+
+        // Find the closest matching size in metadata
+        $matched_size = null;
+        foreach ($meta['sizes'] as $name => $details) {
+            if ($details['width'] == $custom_width && $details['height'] == $custom_height) {
+                $matched_size = $details;
+                break;
+            }
+        }
+
+        if ($matched_size) {
+            $file_info = pathinfo(get_attached_file($attachment_id));
+            $file_path = trailingslashit($file_info['dirname']) . $matched_size['file'];
+            $object_key = str_replace(trailingslashit($upload_dir['basedir']), '', $file_path);
+            $image_url = rtrim(get_option('cloudflare_r2_public_bucket_url'), '/') . '/' . $object_key;
+            $width = $matched_size['width'];
+            $height = $matched_size['height'];
+            $is_intermediate = true;
+        } else {
+            // Fallback to the full-size image if no exact match is found
+            $object_key = str_replace(trailingslashit($upload_dir['basedir']), '', get_attached_file($attachment_id));
+            $image_url = rtrim(get_option('cloudflare_r2_public_bucket_url'), '/') . '/' . $object_key;
+            $width = $meta['width'] ?? null;
+            $height = $meta['height'] ?? null;
+            $is_intermediate = false;
+        }
+    } else {
+        return false; // Fallback to default handling for unsupported $size values
     }
 
     return [$image_url, $width, $height, $is_intermediate];

@@ -269,42 +269,49 @@ add_filter('wp_get_attachment_url', 'replace_media_url_with_r2', 10, 2);
 add_filter('image_downsize', 'cloudflare_r2_image_downsize', 10, 3);
 
 function cloudflare_r2_image_downsize($downsize, $attachment_id, $size) {
+    // Ensure the size parameter is valid
+    if (!is_string($size) && !is_array($size)) {
+        return false; // Fallback to default handling
+    }
+
+    // Retrieve the R2 URL for the attachment
     $r2_url = get_post_meta($attachment_id, '_cloudflare_r2_url', true);
 
     if (!$r2_url) {
-        return false; // Use default handling
+        return false; // Fallback to default handling if no R2 URL is set
     }
 
+    // Retrieve attachment metadata
     $meta = wp_get_attachment_metadata($attachment_id);
 
     if (!$meta) {
-        return false;
+        return false; // Fallback to default handling if no metadata is found
     }
 
     $upload_dir = wp_upload_dir();
 
-    // Check if the requested size exists
-    if ($size == 'full' || !isset($meta['sizes'][$size])) {
-        // Full size image
+    // Handle full-size image
+    if ($size === 'full' || !isset($meta['sizes'][$size])) {
         $object_key = str_replace(trailingslashit($upload_dir['basedir']), '', get_attached_file($attachment_id));
         $image_url = rtrim(get_option('cloudflare_r2_public_bucket_url'), '/') . '/' . $object_key;
-        $width = $meta['width'];
-        $height = $meta['height'];
+        $width = $meta['width'] ?? null;
+        $height = $meta['height'] ?? null;
         $is_intermediate = false;
     } else {
-        // Resized image
+        // Handle specific image sizes
         $size_meta = $meta['sizes'][$size];
         $file_info = pathinfo(get_attached_file($attachment_id));
         $file_path = trailingslashit($file_info['dirname']) . $size_meta['file'];
         $object_key = str_replace(trailingslashit($upload_dir['basedir']), '', $file_path);
         $image_url = rtrim(get_option('cloudflare_r2_public_bucket_url'), '/') . '/' . $object_key;
-        $width = $size_meta['width'];
-        $height = $size_meta['height'];
+        $width = $size_meta['width'] ?? null;
+        $height = $size_meta['height'] ?? null;
         $is_intermediate = true;
     }
 
-    return array($image_url, $width, $height, $is_intermediate);
+    return [$image_url, $width, $height, $is_intermediate];
 }
+
 
 function cloudflare_r2_handle_migration() {
     if (isset($_POST['cloudflare_r2_migrate_media'])) {

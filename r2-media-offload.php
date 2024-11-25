@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: R2 Media Offload
-Plugin URI: https://andrejsrna.sk
+Plugin URI: https://github.com/andrejsrna/R2-Media-Offload
 Description: Offload WordPress media uploads to R2-compatible object storage for efficient and cost-effective storage.
 Version: 1.0
 Author: Andrej Srna

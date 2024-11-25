@@ -15,8 +15,7 @@ Cloudflare R2 Media Offload is a WordPress plugin that offloads your media libra
 
 - WordPress 5.0 or higher
 - PHP 7.2 or higher
-- Composer (for installing dependencies)
-- AWS SDK for PHP (installed via Composer)
+- AWS SDK for PHP (included in the plugin)
 
 ## Installation
 

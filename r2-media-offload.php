@@ -50,8 +50,8 @@ add_action('admin_menu', 'cloudflare_r2_offload_settings_menu');
 
 function cloudflare_r2_offload_settings_menu() {
     add_options_page(
-        'Cloudflare R2 Offload',
-        'Cloudflare R2 Offload',
+        'R2 Offload',
+        'R2 Offload',
         'manage_options',
         'cloudflare-r2-offload',
         'cloudflare_r2_offload_settings_page'
@@ -62,15 +62,15 @@ function cloudflare_r2_offload_settings_menu() {
 function cloudflare_r2_offload_settings_page() {
     ?>
     <div class="wrap">
-        <h1>R2 Offload Settings</h1>
+       <?php echo '<h1>' . esc_html__('R2 Offload Settings', 'r2-media-offload') . '</h1>'; ?>
         <?php if (isset($_GET['cloudflare_r2_migration']) && $_GET['cloudflare_r2_migration'] == 'success'): ?>
             <div id="message" class="updated notice is-dismissible">
-                <p>Media migration to R2 completed successfully.</p>
+<?php echo '<p>' . esc_html__('Media migration to R2 completed successfully.', 'r2-media-offload') . '</p>'; ?>
             </div>
         <?php endif; ?>
         <?php if (isset($_GET['cloudflare_r2_local_deletion']) && $_GET['cloudflare_r2_local_deletion'] == 'success'): ?>
             <div id="message" class="updated notice is-dismissible">
-                <p>Local media files have been deleted successfully.</p>
+<?php echo '<p>' . esc_html__('Local media files have been deleted successfully.', 'r2-media-offload') . '</p>'; ?>
             </div>
         <?php endif; ?>
         <form method="post" action="options.php">
@@ -81,20 +81,30 @@ function cloudflare_r2_offload_settings_page() {
             ?>
         </form>
         <hr>
-        <h2>Migrate Existing Media</h2>
-        <p>You can migrate your existing media library to R2.</p>
+<?php echo '<h2>' . esc_html__('Migrate Existing Media', 'cloudflare-r2-offload') . '</h2>'; ?>
+<?php echo '<p>' . esc_html__('You can migrate your existing media library to R2.', 'r2-media-offload') . '</p>'; ?>
         <form method="post">
             <?php wp_nonce_field('cloudflare_r2_migrate_media', 'cloudflare_r2_migrate_media_nonce'); ?>
-            <?php submit_button('Migrate Media to R2', 'primary', 'cloudflare_r2_migrate_media'); ?>
+<?php submit_button(
+    esc_html__('Migrate Media to R2', 'r2-media-offload'),
+    'primary',
+    'cloudflare_r2_migrate_media'
+); ?>
         </form>
         <hr>
-        <h2>Media Management</h2>
-        <p>You can manage your media files that have been migrated to R2.</p>
+<?php echo '<h2>' . esc_html__('Media Management', 'r2-media-offload') . '</h2>'; ?>
+<?php echo '<p>' . esc_html__('You can manage your media files that have been migrated to R2.', 'r2-media-offload') . '</p>'; ?>
         <form method="post">
             <?php wp_nonce_field('cloudflare_r2_delete_local_media', 'cloudflare_r2_delete_local_media_nonce'); ?>
-            <?php submit_button('Delete Local Media Files Already on R2', 'secondary', 'cloudflare_r2_delete_local_media', false, [
-                'onclick' => 'return confirm("Are you sure you want to delete all local media files that have been migrated to R2? This action is irreversible.")',
-            ]); ?>
+            <?php submit_button(
+    esc_html__('Delete Local Media Files Already on R2', 'r2-media-offload'),
+    'secondary',
+    'cloudflare_r2_delete_local_media',
+    false,
+    [
+        'onclick' => 'return confirm("' . esc_js(__('Are you sure you want to delete all local media files that have been migrated to R2? This action is irreversible.', 'r2-media-offload')) . '")',
+    ]
+); ?>
         </form>
     </div>
     <?php
@@ -150,9 +160,10 @@ function cloudflare_r2_public_bucket_url_callback() {
 
 function cloudflare_r2_keep_local_media_callback() {
     $value = get_option('cloudflare_r2_keep_local_media', 'yes');
-    echo '<label><input type="checkbox" name="cloudflare_r2_keep_local_media" value="yes"' . checked($value, 'yes', false) . '> Keep local copies of media files after uploading to R2</label>';
-    echo '<p class="description">Uncheck to delete local media files after uploading to R2. Be cautious, as this action is irreversible.</p>';
+    echo '<label><input type="checkbox" name="cloudflare_r2_keep_local_media" value="yes"' . checked($value, 'yes', false) . '> ' . esc_html__('Keep local copies of media files after uploading to R2', 'r2-media-offload') . '</label>';
+    echo '<p class="description">' . esc_html__('Uncheck to delete local media files after uploading to R2. Be cautious, as this action is irreversible.', 'r2-media-offload') . '</p>';
 }
+
 
 add_filter('wp_generate_attachment_metadata', 'cloudflare_r2_upload_media', 10, 2);
 

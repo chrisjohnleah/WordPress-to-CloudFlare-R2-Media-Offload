@@ -257,9 +257,6 @@ function cloudflare_r2_upload_media($metadata, $attachment_id) {
     return $metadata;
 }
 
-
-add_filter('wp_get_attachment_url', 'replace_media_url_with_r2', 10, 2);
-
 function replace_media_url_with_r2($url, $attachment_id) {
     $r2_url = get_post_meta($attachment_id, '_cloudflare_r2_url', true);
     if ($r2_url) {
@@ -467,3 +464,37 @@ function cloudflare_r2_delete_local_media_files() {
         @rmdir($upload_dir_path); // Suppress warnings if directory is not empty
     }
 }
+
+add_filter('wp_calculate_image_srcset', 'cloudflare_r2_wp_calculate_image_srcset', 10, 5);
+
+function cloudflare_r2_wp_calculate_image_srcset($sources, $size_array, $image_src, $image_meta, $attachment_id) {
+    $r2_url = get_post_meta($attachment_id, '_cloudflare_r2_url', true);
+    if (!$r2_url) {
+        return $sources; // Use default handling if no R2 URL is set
+    }
+
+    $upload_dir = wp_upload_dir();
+    $upload_baseurl = $upload_dir['baseurl'];
+
+    foreach ($sources as $key => $source) {
+        // Replace the base URL with the R2 public URL
+        $r2_base_url = rtrim(get_option('cloudflare_r2_public_bucket_url'), '/');
+        $original_url = $source['url'];
+
+        // Replace the upload base URL with R2 base URL
+        $new_url = str_replace($upload_baseurl, $r2_base_url, $original_url);
+
+        // Alternatively, construct the URL based on the file path
+        // Get the file path relative to the upload base directory
+        $file_relative_path = str_replace(trailingslashit($upload_dir['basedir']), '', get_attached_file($attachment_id));
+        $file_relative_path = dirname($file_relative_path) . '/' . basename($source['url']);
+
+        $new_url = $r2_base_url . '/' . $file_relative_path;
+
+        // Update the source URL
+        $sources[$key]['url'] = $new_url;
+    }
+
+    return $sources;
+}
+

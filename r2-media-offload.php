@@ -112,7 +112,7 @@ function cloudflare_r2_offload_settings() {
 
     // Existing add_settings_section and add_settings_field calls
 
-    add_settings_section('cloudflare_r2_settings_section', 'Cloudflare R2 API Settings', null, 'cloudflare_r2_offload_settings');
+    add_settings_section('cloudflare_r2_settings_section', 'R2 API Settings', null, 'cloudflare_r2_offload_settings');
     
     add_settings_field('cloudflare_r2_keep_local_media', 'Keep Local Media Files', 'cloudflare_r2_keep_local_media_callback', 'cloudflare_r2_offload_settings', 'cloudflare_r2_settings_section');
     add_settings_field('cloudflare_r2_public_bucket_url', 'Public Bucket URL', 'cloudflare_r2_public_bucket_url_callback', 'cloudflare_r2_offload_settings', 'cloudflare_r2_settings_section');
@@ -150,8 +150,8 @@ function cloudflare_r2_public_bucket_url_callback() {
 
 function cloudflare_r2_keep_local_media_callback() {
     $value = get_option('cloudflare_r2_keep_local_media', 'yes');
-    echo '<label><input type="checkbox" name="cloudflare_r2_keep_local_media" value="yes"' . checked($value, 'yes', false) . '> Keep local copies of media files after uploading to Cloudflare R2</label>';
-    echo '<p class="description">Uncheck to delete local media files after uploading to Cloudflare R2. Be cautious, as this action is irreversible.</p>';
+    echo '<label><input type="checkbox" name="cloudflare_r2_keep_local_media" value="yes"' . checked($value, 'yes', false) . '> Keep local copies of media files after uploading to R2</label>';
+    echo '<p class="description">Uncheck to delete local media files after uploading to R2. Be cautious, as this action is irreversible.</p>';
 }
 
 add_filter('wp_generate_attachment_metadata', 'cloudflare_r2_upload_media', 10, 2);

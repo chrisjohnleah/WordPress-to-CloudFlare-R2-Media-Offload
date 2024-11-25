@@ -62,10 +62,10 @@ function cloudflare_r2_offload_settings_menu() {
 function cloudflare_r2_offload_settings_page() {
     ?>
     <div class="wrap">
-        <h1>Cloudflare R2 Offload Settings</h1>
+        <h1>R2 Offload Settings</h1>
         <?php if (isset($_GET['cloudflare_r2_migration']) && $_GET['cloudflare_r2_migration'] == 'success'): ?>
             <div id="message" class="updated notice is-dismissible">
-                <p>Media migration to Cloudflare R2 completed successfully.</p>
+                <p>Media migration to R2 completed successfully.</p>
             </div>
         <?php endif; ?>
         <?php if (isset($_GET['cloudflare_r2_local_deletion']) && $_GET['cloudflare_r2_local_deletion'] == 'success'): ?>
@@ -82,18 +82,18 @@ function cloudflare_r2_offload_settings_page() {
         </form>
         <hr>
         <h2>Migrate Existing Media</h2>
-        <p>You can migrate your existing media library to Cloudflare R2.</p>
+        <p>You can migrate your existing media library to R2.</p>
         <form method="post">
             <?php wp_nonce_field('cloudflare_r2_migrate_media', 'cloudflare_r2_migrate_media_nonce'); ?>
-            <?php submit_button('Migrate Media to Cloudflare R2', 'primary', 'cloudflare_r2_migrate_media'); ?>
+            <?php submit_button('Migrate Media to R2', 'primary', 'cloudflare_r2_migrate_media'); ?>
         </form>
         <hr>
         <h2>Media Management</h2>
-        <p>You can manage your media files that have been migrated to Cloudflare R2.</p>
+        <p>You can manage your media files that have been migrated to R2.</p>
         <form method="post">
             <?php wp_nonce_field('cloudflare_r2_delete_local_media', 'cloudflare_r2_delete_local_media_nonce'); ?>
-            <?php submit_button('Delete Local Media Files Already on Cloudflare R2', 'secondary', 'cloudflare_r2_delete_local_media', false, [
-                'onclick' => 'return confirm("Are you sure you want to delete all local media files that have been migrated to Cloudflare R2? This action is irreversible.")',
+            <?php submit_button('Delete Local Media Files Already on R2', 'secondary', 'cloudflare_r2_delete_local_media', false, [
+                'onclick' => 'return confirm("Are you sure you want to delete all local media files that have been migrated to R2? This action is irreversible.")',
             ]); ?>
         </form>
     </div>
@@ -221,7 +221,7 @@ function cloudflare_r2_upload_media($metadata, $attachment_id) {
                 'ACL'    => 'public-read',
             ]);
         } catch (Exception $e) {
-            error_log('Cloudflare R2 upload failed for ' . $upload['file'] . ': ' . $e->getMessage());
+            error_log('R2 upload failed for ' . $upload['file'] . ': ' . $e->getMessage());
             // If upload fails and we're deleting local files, do not delete
             $upload_failed = true;
         }

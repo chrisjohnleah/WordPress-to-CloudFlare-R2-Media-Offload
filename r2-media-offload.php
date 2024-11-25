@@ -324,14 +324,12 @@ function cloudflare_r2_handle_migration() {
 add_action('admin_init', 'cloudflare_r2_handle_migration');
 
 function cloudflare_r2_migrate_existing_media() {
-    // Retrieve settings
+    // Retrieve Cloudflare R2 settings
     $access_key = get_option('cloudflare_r2_access_key');
     $secret_key = get_option('cloudflare_r2_secret_key');
     $bucket_name = get_option('cloudflare_r2_bucket_name');
     $endpoint = get_option('cloudflare_r2_endpoint');
     $public_bucket_url = rtrim(get_option('cloudflare_r2_public_bucket_url'), '/');
-    $keep_local_media = get_option('cloudflare_r2_keep_local_media', 'yes');
-
 
     if (!$access_key || !$secret_key || !$bucket_name || !$endpoint || !$public_bucket_url) {
         return; // Do not proceed without necessary credentials
@@ -349,45 +347,99 @@ function cloudflare_r2_migrate_existing_media() {
         ],
     ]);
 
-    // Set batch size
-    $batch_size = 50;
-
-    // Initialize offset
-    $offset = 0;
-
-    // Loop until all attachments are processed
-    do {
-        // Query for a batch of attachments
-        $args = [
-            'post_type'      => 'attachment',
-            'posts_per_page' => $batch_size,
-            'offset'         => $offset,
-            'post_status'    => 'any',
-            'meta_query'     => [
-                [
-                    'key'     => '_cloudflare_r2_url',
-                    'compare' => 'NOT EXISTS',
-                ],
+    // Query for all attachments
+    $args = [
+        'post_type'      => 'attachment',
+        'posts_per_page' => -1,
+        'post_status'    => 'any',
+        'meta_query'     => [
+            [
+                'key'     => '_cloudflare_r2_url',
+                'compare' => 'NOT EXISTS',
             ],
-        ];
-        $attachments = get_posts($args);
+        ],
+    ];
+    $attachments = get_posts($args);
 
-        // Process each attachment
-        foreach ($attachments as $attachment) {
-            $attachment_id = $attachment->ID;
+    // Process each attachment
+    foreach ($attachments as $attachment) {
+        $attachment_id = $attachment->ID;
 
-            // Get metadata
-            $metadata = wp_get_attachment_metadata($attachment_id);
+        // Get metadata and file path
+        $metadata = wp_get_attachment_metadata($attachment_id);
+        $file = get_attached_file($attachment_id);
 
-            // Call the upload function
-            cloudflare_r2_upload_media($metadata, $attachment_id);
+        if (!$file || !file_exists($file)) {
+            continue; // Skip if the file doesn't exist
         }
 
-        // Increase offset
-        $offset += $batch_size;
+        // Upload file to R2
+        try {
+            $object_key = str_replace(trailingslashit(wp_upload_dir()['basedir']), '', $file);
+            $s3Client->putObject([
+                'Bucket' => $bucket_name,
+                'Key'    => $object_key,
+                'SourceFile' => $file,
+                'ACL'    => 'public-read',
+            ]);
 
-    } while (count($attachments) == $batch_size);
+            // Update the metadata with the R2 URL
+            $r2_url = $public_bucket_url . '/' . $object_key;
+            update_post_meta($attachment_id, '_cloudflare_r2_url', $r2_url);
+
+            // Replace URLs in the database
+            cloudflare_r2_update_database_paths($attachment_id, $r2_url);
+
+        } catch (Exception $e) {
+            error_log('Cloudflare R2 upload failed: ' . $e->getMessage());
+        }
+    }
 }
+
+function cloudflare_r2_update_database_paths($attachment_id, $r2_url) {
+    global $wpdb;
+
+    // Get the attachment file URL
+    $upload_dir = wp_upload_dir();
+    $file_path = get_attached_file($attachment_id);
+    $old_url = $upload_dir['baseurl'] . '/' . str_replace(trailingslashit($upload_dir['basedir']), '', $file_path);
+
+    // Update featured images
+    $wpdb->query(
+        $wpdb->prepare(
+            "UPDATE {$wpdb->postmeta} 
+            SET meta_value = REPLACE(meta_value, %s, %s) 
+            WHERE meta_key = '_thumbnail_id' AND meta_value = %d",
+            $old_url,
+            $r2_url,
+            $attachment_id
+        )
+    );
+
+    // Update post content
+    $wpdb->query(
+        $wpdb->prepare(
+            "UPDATE {$wpdb->posts} 
+            SET post_content = REPLACE(post_content, %s, %s)",
+            $old_url,
+            $r2_url
+        )
+    );
+
+    // Update other meta fields that might contain the old URL
+    $wpdb->query(
+        $wpdb->prepare(
+            "UPDATE {$wpdb->postmeta} 
+            SET meta_value = REPLACE(meta_value, %s, %s)",
+            $old_url,
+            $r2_url
+        )
+    );
+
+    // Optional: Update custom tables if necessary
+    // Add queries for custom plugins or themes that store image URLs
+}
+
 
 function cloudflare_r2_handle_local_deletion() {
     if (isset($_POST['cloudflare_r2_delete_local_media'])) {

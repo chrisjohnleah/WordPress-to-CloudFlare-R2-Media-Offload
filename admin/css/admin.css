@@ -1,0 +1,219 @@
+/* R2 Media Offload Admin Styles */
+
+.r2-progress-bar {
+    width: 100%;
+    height: 20px;
+    background-color: #f0f0f0;
+    border-radius: 3px;
+    margin: 10px 0;
+}
+
+.r2-progress {
+    height: 100%;
+    background-color: #0073aa;
+    border-radius: 3px;
+    text-align: center;
+    line-height: 20px;
+    color: #fff;
+    transition: width 0.3s ease;
+}
+
+.r2-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.r2-stat-box {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    padding: 15px;
+    border-radius: 3px;
+    min-width: 200px;
+}
+
+.r2-stat-box h3 {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    color: #23282d;
+}
+
+.r2-stat-box p {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: #0073aa;
+}
+
+.r2-log-viewer {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    padding: 15px;
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+
+.r2-log-entry {
+    margin-bottom: 5px;
+    font-family: monospace;
+    font-size: 12px;
+}
+
+.r2-log-time {
+    color: #666;
+}
+
+.r2-log-level {
+    font-weight: bold;
+    margin: 0 5px;
+}
+
+.r2-log-error .r2-log-level {
+    color: #dc3232;
+}
+
+.r2-log-warning .r2-log-level {
+    color: #ffb900;
+}
+
+.r2-log-info .r2-log-level {
+    color: #0073aa;
+}
+
+.form-table td {
+    position: relative;
+}
+
+.form-table input[type="text"],
+.form-table input[type="password"] {
+    width: 100%;
+    max-width: 500px;
+}
+
+.form-table .description {
+    margin-top: 5px;
+    color: #666;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 782px) {
+    .r2-stat-box {
+        width: 100%;
+    }
+
+    .form-table input[type="text"],
+    .form-table input[type="password"] {
+        max-width: 100%;
+    }
+}
+
+.r2-media-offload-settings {
+    margin: 20px 0;
+}
+
+.r2-media-offload-actions {
+    margin: 30px 0;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.r2-media-offload-stats {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-left: 4px solid #2271b1;
+}
+
+.r2-media-offload-buttons {
+    margin: 20px 0;
+}
+
+.r2-media-offload-buttons button {
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.r2-media-offload-progress {
+    margin: 20px 0;
+}
+
+.r2-media-offload-progress-bar {
+    height: 20px;
+    background-color: #f0f0f1;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.r2-media-offload-progress-bar-inner {
+    width: 0;
+    height: 100%;
+    background-color: #2271b1;
+    transition: width 0.3s ease;
+}
+
+.r2-media-offload-progress-text {
+    margin-top: 5px;
+    text-align: center;
+    color: #50575e;
+}
+
+.r2-media-offload-system-info {
+    margin: 30px 0;
+}
+
+.r2-media-offload-system-info table {
+    border-spacing: 0;
+}
+
+.r2-media-offload-system-info td {
+    padding: 12px;
+}
+
+.r2-media-offload-system-info tr:nth-child(odd) {
+    background-color: #f6f7f7;
+}
+
+.r2-media-offload-debug-log {
+    margin: 30px 0;
+}
+
+.r2-media-offload-log-viewer {
+    font-family: monospace;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.r2-media-offload-log-viewer pre {
+    margin: 0;
+    padding: 0;
+}
+
+.form-table td {
+    position: relative;
+}
+
+.form-table .description {
+    margin-top: 5px;
+    color: #646970;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+@media screen and (max-width: 782px) {
+    .r2-media-offload-buttons button {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .r2-media-offload-system-info td {
+        padding: 8px;
+    }
+} 

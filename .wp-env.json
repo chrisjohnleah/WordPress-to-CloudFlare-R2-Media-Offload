@@ -5,18 +5,14 @@
   "port": 8888,
   "config": {
     "WP_DEBUG": true,
-    "SCRIPT_DEBUG": true
+    "SCRIPT_DEBUG": true,
+    "WP_DEBUG_DISPLAY": true,
+    "WP_DEBUG_LOG": true,
+    "WP_MEMORY_LIMIT": "1024M",
+    "WP_MAX_MEMORY_LIMIT": "1024M"
   },
   "mappings": {
-    "wp-content/plugins/r2-media-offload": "./r2-media-offload"
-  },
-  "env": {
-    "development": {
-      "config": {
-        "ADMIN_EMAIL": "admin@example.com",
-        "ADMIN_PASSWORD": "password",
-        "ADMIN_USER": "admin"
-      }
-    }
+    "wp-content/plugins/": "./",
+    "wp-content/debug.log": "./debug.log"
   }
-} 
+}

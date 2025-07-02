@@ -50,9 +50,15 @@ class R2_Media_Library {
             return $sources;
         }
 
+        // Get the proper R2 base URL from settings instead of deriving from individual file URL
+        $config = R2_Media_Offload()->settings()->get_all_settings();
+        if (empty($config['public_bucket_url'])) {
+            return $sources;
+        }
+
         $upload_dir = wp_upload_dir();
         $base_url = $upload_dir['baseurl'];
-        $r2_base_url = dirname($r2_url);
+        $r2_base_url = $config['public_bucket_url'];
 
         foreach ($sources as &$source) {
             $source['url'] = str_replace($base_url, $r2_base_url, $source['url']);

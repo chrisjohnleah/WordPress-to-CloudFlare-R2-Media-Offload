@@ -34,7 +34,7 @@ class R2_Uploader {
      *
      * @return S3Client|null
      */
-    private function get_s3_client() {
+    public function get_s3_client() {
         if (!is_null($this->s3_client)) {
             return $this->s3_client;
         }
